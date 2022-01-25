@@ -5,4 +5,8 @@
     <string name="tickets_list">Tickets List</string>
     <string name="scan_ticket">Scan Ticket</string>
     <string name="generate_ticket">Generate Ticket</string>
+    <string name="date">Date</string>
+    <string name="ticket_title">Ticket Title</string>
+    <string name="max_scans">Max Scans</string>
+    <string name="create_ticket">Create Ticket</string>
 </resources>
