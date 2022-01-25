@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Ticket Checker App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tickets_list">Tickets List</string>
+    <string name="scan_ticket">Scan Ticket</string>
+    <string name="generate_ticket">Generate Ticket</string>
+</resources>
