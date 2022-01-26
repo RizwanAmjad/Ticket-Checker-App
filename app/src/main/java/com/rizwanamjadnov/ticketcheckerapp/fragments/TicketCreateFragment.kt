@@ -47,7 +47,7 @@ class TicketCreateFragment : Fragment() {
             parentFragmentManager.beginTransaction().apply {
                 replace(R.id.navFragmentContainerView, QRCodeFragment().apply {
                     val bundle = Bundle()
-                    bundle.putString("QR", ticket.ticketTitle+'/'+ticket.ticketDate+"/"+ticket.isScanned)
+                    bundle.putString("QR", ticket.ticketTitle+'~'+ticket.ticketDate+"~"+ticket.isScanned)
                     arguments = bundle
                 })
                 commit()

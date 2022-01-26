@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.rizwanamjadnov.ticketcheckerapp.models.TicketModel
 import java.sql.SQLException
 
+
 class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     companion object{
         const val DB_VERSION = 1
@@ -61,5 +62,42 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null
         }
         cursor.close()
         return data
+    }
+
+    fun markAsScanned(ticket: TicketModel){
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+
+        contentValues.put(DBContract.TicketEntry.KEY_IS_SCANNED, 1)
+
+       db.update(DBContract.TicketEntry.TABLE_NAME, contentValues,
+            "${DBContract.TicketEntry.KEY_TICKET_TITLE}=? AND ${DBContract.TicketEntry.KEY_TICKET_DATE}=? ",
+            listOf(ticket.ticketTitle, ticket.ticketDate).toTypedArray()
+        )
+        db.close()
+    }
+
+    fun checkTicketExistence(ticket: TicketModel): TicketModel?{
+        val db = this.readableDatabase
+        val cursor: Cursor
+        try{
+            cursor = db.rawQuery("SELECT * FROM ${DBContract.TicketEntry.TABLE_NAME} WHERE ${DBContract.TicketEntry.KEY_TICKET_TITLE}='${ticket.ticketTitle}' AND ${DBContract.TicketEntry.KEY_TICKET_DATE}='${ticket.ticketDate}'", null)
+        }catch (e:SQLException){
+            return null
+        }
+
+        var ticket: TicketModel? = null
+
+        if(cursor.moveToFirst()) {
+            do{
+                val ticketTitle = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_TITLE))
+                val ticketDate = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_DATE))
+                val isScanned = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_IS_SCANNED))
+
+                ticket = TicketModel(ticketTitle, ticketDate, isScanned)
+            }while (cursor.moveToNext())
+        }
+        cursor.close()
+        return ticket
     }
 }

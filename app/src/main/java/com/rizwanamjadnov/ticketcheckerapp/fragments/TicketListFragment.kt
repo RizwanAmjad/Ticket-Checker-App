@@ -28,7 +28,7 @@ class TicketListFragment : Fragment() {
 
         databaseHandler = DatabaseHandler(requireContext())
 
-        dataset = databaseHandler.allTickets()
+        dataset = databaseHandler.allTickets().asReversed()
 
         ticketListRecyclerView.adapter = TicketListAdapter(dataset)
         ticketListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
