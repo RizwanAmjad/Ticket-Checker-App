@@ -30,7 +30,7 @@ class TicketListFragment : Fragment() {
 
         dataset = databaseHandler.allTickets().asReversed()
 
-        ticketListRecyclerView.adapter = TicketListAdapter(dataset)
+        ticketListRecyclerView.adapter = TicketListAdapter(dataset, parentFragmentManager)
         ticketListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
 

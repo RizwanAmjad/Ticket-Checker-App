@@ -28,4 +28,12 @@
         android:text="@string/scanned"
         android:textColor="@color/tomato"
         android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/qrCodeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QR Code"
+        android:layout_alignParentEnd="true"/>
+
 </RelativeLayout>
