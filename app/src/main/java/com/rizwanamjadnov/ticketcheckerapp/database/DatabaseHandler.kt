@@ -19,7 +19,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null
                 DBContract.TicketEntry.KEY_ID + " INTEGER PRIMARY KEY, "+
                 DBContract.TicketEntry.KEY_TICKET_TITLE + " TEXT,"+
                 DBContract.TicketEntry.KEY_TICKET_DATE +" TEXT,"+
-                DBContract.TicketEntry.KEY_MAX_SCANS +" INTEGER"+
+                DBContract.TicketEntry.KEY_IS_SCANNED +" INTEGER"+
                 ")")
     }
 
@@ -34,7 +34,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null
 
         contentValues.put(DBContract.TicketEntry.KEY_TICKET_TITLE, ticket.ticketTitle)
         contentValues.put(DBContract.TicketEntry.KEY_TICKET_DATE, ticket.ticketDate)
-        contentValues.put(DBContract.TicketEntry.KEY_MAX_SCANS, ticket.maxScans)
+        contentValues.put(DBContract.TicketEntry.KEY_IS_SCANNED, ticket.isScanned)
 
         db.insert(DBContract.TicketEntry.TABLE_NAME, null, contentValues)
         db.close()
@@ -54,9 +54,9 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null
             do{
                 val ticketTitle = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_TITLE))
                 val ticketDate = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_DATE))
-                val maxScans = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_MAX_SCANS))
+                val isScanned = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_IS_SCANNED))
 
-                data.add(TicketModel(ticketTitle, ticketDate, maxScans))
+                data.add(TicketModel(ticketTitle, ticketDate, isScanned))
             }while (cursor.moveToNext())
         }
         cursor.close()

@@ -7,17 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.rizwanamjadnov.ticketcheckerapp.R
-import com.rizwanamjadnov.ticketcheckerapp.database.DBContract
 import com.rizwanamjadnov.ticketcheckerapp.database.DatabaseHandler
 import com.rizwanamjadnov.ticketcheckerapp.models.TicketModel
 
 class TicketCreateFragment : Fragment() {
     private lateinit var ticketTitleText: EditText
     private lateinit var ticketDateText: EditText
-    private lateinit var maxScansText: EditText
     private lateinit var createTicketButton: Button
 
     private lateinit var databaseHandler: DatabaseHandler
@@ -32,28 +29,25 @@ class TicketCreateFragment : Fragment() {
 
         ticketTitleText = view.findViewById(R.id.ticketTitleText)
         ticketDateText = view.findViewById(R.id.ticketDateText)
-        maxScansText = view.findViewById(R.id.maxScansText)
         createTicketButton = view.findViewById(R.id.createTicketButton)
 
         createTicketButton.setOnClickListener{
             val ticketTitle = ticketTitleText.text.toString()
             val ticketDate = ticketDateText.text.toString()
-            val maxScans = maxScansText.text.toString().toInt()
 
-            val ticket = TicketModel(ticketTitle, ticketDate, maxScans)
+            val ticket = TicketModel(ticketTitle, ticketDate, 0)
 
             databaseHandler.addTicket(ticket)
 
             Snackbar.make(view, "Ticket Created Successfully", Snackbar.LENGTH_SHORT).show()
             ticketTitleText.text.clear()
             ticketDateText.text.clear()
-            maxScansText.text.clear()
 
             // open qr code fragment
             parentFragmentManager.beginTransaction().apply {
                 replace(R.id.navFragmentContainerView, QRCodeFragment().apply {
                     val bundle = Bundle()
-                    bundle.putString("QR", ticket.ticketTitle+'/'+ticket.ticketDate+"/"+ticket.maxScans)
+                    bundle.putString("QR", ticket.ticketTitle+'/'+ticket.ticketDate+"/"+ticket.isScanned)
                     arguments = bundle
                 })
                 commit()

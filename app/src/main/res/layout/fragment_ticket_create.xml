@@ -29,25 +29,11 @@
         android:hint="@string/date"
         android:inputType="date"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/maxScansText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ticketTitleText" />
-
-    <EditText
-        android:id="@+id/maxScansText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/max_scans"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/createTicketButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ticketDateText" />
+        app:layout_constraintTop_toBottomOf="@+id/ticketTitleText" />
 
     <Button
         android:id="@+id/createTicketButton"
@@ -58,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/maxScansText" />
+        app:layout_constraintTop_toBottomOf="@+id/ticketDateText" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
@@ -72,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="448dp" />
+        app:layout_constraintGuide_begin="378dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

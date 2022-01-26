@@ -21,10 +21,11 @@
         android:text="TextView" />
 
     <TextView
-        android:id="@+id/maxScans"
+        android:id="@+id/isScanned"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:textSize="30sp"
-        android:text="TextView" />
+        android:text="@string/scanned"
+        android:textColor="@color/tomato"
+        android:textSize="25sp" />
 </RelativeLayout>

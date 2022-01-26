@@ -14,7 +14,7 @@ class TicketListAdapter(private val dataset: List<TicketModel>):
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val ticketTitle: TextView = itemView.findViewById(R.id.ticketTitle)
         val ticketDate: TextView = itemView.findViewById(R.id.ticketDate)
-        val maxScans: TextView = itemView.findViewById(R.id.maxScans)
+        val isScanned: TextView = itemView.findViewById(R.id.isScanned)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,7 +28,9 @@ class TicketListAdapter(private val dataset: List<TicketModel>):
         holder.apply {
             ticketTitle.text = ticket.ticketTitle
             ticketDate.text = ticket.ticketDate
-            maxScans.text = ticket.maxScans.toString()
+            if(ticket.isScanned == 0){
+                isScanned.visibility = View.GONE
+            }
         }
     }
 
