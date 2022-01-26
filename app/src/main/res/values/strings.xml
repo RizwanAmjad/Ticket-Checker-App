@@ -9,4 +9,5 @@
     <string name="ticket_title">Ticket Title</string>
     <string name="max_scans">Max Scans</string>
     <string name="create_ticket">Create Ticket</string>
+    <string name="share_qr_code">Share QR Code</string>
 </resources>

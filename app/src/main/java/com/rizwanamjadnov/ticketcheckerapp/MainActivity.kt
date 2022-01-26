@@ -1,7 +1,11 @@
 package com.rizwanamjadnov.ticketcheckerapp
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -29,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         fragmentContainerView = findViewById(R.id.navFragmentContainerView)
 
         navigateToFragment(ticketListFragment)
+        getPermissions()
 
         // handle bottom navigation
         bottomNavigationView.setOnItemSelectedListener {
@@ -54,6 +59,14 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.navFragmentContainerView, fragment)
             commit()
+        }
+    }
+
+    private fun getPermissions(){
+        if(Build.VERSION.SDK_INT>=23){
+            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE),101)
+            }
         }
     }
 }

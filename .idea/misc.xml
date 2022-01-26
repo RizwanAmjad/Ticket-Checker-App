@@ -4,11 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22327898550724637" />
+        <entry key="app/src/main/res/layout/fragment_qr_code.xml" value="0.1933876811594203" />
         <entry key="app/src/main/res/layout/fragment_ticket_create.xml" value="0.20244565217391305" />
         <entry key="app/src/main/res/layout/fragment_ticket_list.xml" value="0.20244565217391305" />
         <entry key="app/src/main/res/layout/fragment_ticket_scan.xml" value="0.20244565217391305" />
         <entry key="app/src/main/res/layout/ticket_list_row.xml" value="0.2078804347826087" />
         <entry key="app/src/main/res/menu/bottom_menu_items.xml" value="0.16822916666666668" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.11770833333333333" />
       </map>
     </option>
   </component>

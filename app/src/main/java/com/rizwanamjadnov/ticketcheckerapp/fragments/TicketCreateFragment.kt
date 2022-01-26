@@ -48,6 +48,16 @@ class TicketCreateFragment : Fragment() {
             ticketTitleText.text.clear()
             ticketDateText.text.clear()
             maxScansText.text.clear()
+
+            // open qr code fragment
+            parentFragmentManager.beginTransaction().apply {
+                replace(R.id.navFragmentContainerView, QRCodeFragment().apply {
+                    val bundle = Bundle()
+                    bundle.putString("QR", ticket.ticketTitle+'/'+ticket.ticketDate+"/"+ticket.maxScans)
+                    arguments = bundle
+                })
+                commit()
+            }
         }
 
         return view
