@@ -23,6 +23,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 
 import android.os.Environment
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import java.io.File
 import java.io.FileOutputStream
@@ -33,6 +34,10 @@ class QRCodeFragment : Fragment() {
     private lateinit var qrCodeImage: ImageView
     private lateinit var shareQRCodeButton: Button
 
+    private lateinit var ticketTitle: TextView
+    private lateinit var ticketDate: TextView
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,6 +47,9 @@ class QRCodeFragment : Fragment() {
 
         qrCodeImage = view.findViewById(R.id.qrCodeImage)
         shareQRCodeButton = view.findViewById(R.id.shareQRCodeButton)
+
+        ticketTitle = view.findViewById(R.id.ticketTitle)
+        ticketDate = view.findViewById(R.id.ticketDate)
 
         shareQRCodeButton.setOnClickListener {
             if(Build.VERSION.SDK_INT>=23){
@@ -55,6 +63,14 @@ class QRCodeFragment : Fragment() {
         }
 
         val dataInCode = requireArguments().get("QR")
+
+        val dateAndTitle = dataInCode.toString()
+
+        dateAndTitle.split('~').also { item->
+            ticketTitle.text = item[0]
+            ticketDate.text = item[1]
+        }
+
         val multiFormatWriter = MultiFormatWriter();
         try{
             val bitMatrix=multiFormatWriter.encode(dataInCode as String?, BarcodeFormat.QR_CODE,200,200);
