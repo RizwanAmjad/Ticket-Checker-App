@@ -1,6 +1,7 @@
 package com.rizwanamjadnov.ticketcheckerapp.fragments
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -67,17 +68,29 @@ class TicketScanFragment : Fragment() {
             } else {
                 val resultContent = result.contents.split('~')
                 try{
-                    Log.d("HERE", resultContent.toString())
-
                     val ticket = TicketModel(resultContent[0], resultContent[1], resultContent[2].toInt())
                     val dbTicket = databaseHandler.checkTicketExistence(ticket)
 
                     when {
                         dbTicket == null -> {
-                            Snackbar.make(requireView(), "Invalid Ticket", Snackbar.LENGTH_SHORT).show()
+                            val dialog = AlertDialog.Builder(context).apply {
+                                setTitle("Invalid Ticket")
+                                setMessage("This is not an App Generated Ticket")
+                                setNeutralButton("I understand") { di, _ ->
+                                    di.dismiss()
+                                }
+                            }
+                            dialog.show()
                         }
                         dbTicket.isScanned == 1 -> {
-                            Snackbar.make(requireView(), "Already Scanned", Snackbar.LENGTH_SHORT).show()
+                            val dialog = AlertDialog.Builder(context).apply {
+                                setTitle("Ticket Already Scanned")
+                                setMessage("This ticket has already been Scanned.")
+                                setNeutralButton("I understand") { di, _ ->
+                                    di.dismiss()
+                                }
+                            }
+                            dialog.show()
                         }
                         else -> {
                             databaseHandler.markAsScanned(ticket)
@@ -86,7 +99,14 @@ class TicketScanFragment : Fragment() {
                     }
 
                 }catch (e: Exception){
-                    Snackbar.make(requireView(), "Invalid QR Code", Snackbar.LENGTH_SHORT).show()
+                    val dialog = AlertDialog.Builder(context).apply {
+                        setTitle("Invalid Ticket")
+                        setMessage("This is not an App Generated Ticket")
+                        setNeutralButton("I understand") { di, _ ->
+                            di.dismiss()
+                        }
+                    }
+                    dialog.show()
                 }
             }
         } else {

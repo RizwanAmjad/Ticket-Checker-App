@@ -1,6 +1,8 @@
 package com.rizwanamjadnov.ticketcheckerapp.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.rizwanamjadnov.ticketcheckerapp.R
 import com.rizwanamjadnov.ticketcheckerapp.database.DatabaseHandler
 import com.rizwanamjadnov.ticketcheckerapp.models.TicketModel
+import com.rizwanamjadnov.ticketcheckerapp.util.InputValidation
 
 class TicketCreateFragment : Fragment() {
     private lateinit var ticketTitleText: EditText
@@ -36,6 +39,17 @@ class TicketCreateFragment : Fragment() {
             val ticketDate = ticketDateText.text.toString()
 
             val ticket = TicketModel(ticketTitle, ticketDate, 0)
+            if(!InputValidation.validateTicket(ticket)){
+                val dialog = AlertDialog.Builder(context).apply {
+                    setTitle("Ticket Validation Error")
+                    setMessage("Name should contain letters and Spaces only\nAnd Date Should be DD/MM/YYYY")
+                    setNeutralButton("I understand") { di, _ ->
+                        di.dismiss()
+                    }
+                }
+                dialog.show()
+                return@setOnClickListener
+            }
 
             databaseHandler.addTicket(ticket)
 
