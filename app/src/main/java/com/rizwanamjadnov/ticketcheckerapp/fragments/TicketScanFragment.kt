@@ -73,14 +73,10 @@ class TicketScanFragment : Fragment() {
 
                     when {
                         dbTicket == null -> {
-                            val dialog = AlertDialog.Builder(context).apply {
-                                setTitle("Invalid Ticket")
-                                setMessage("This is not an App Generated Ticket")
-                                setNeutralButton("I understand") { di, _ ->
-                                    di.dismiss()
-                                }
-                            }
-                            dialog.show()
+                            // scanning another app generated ticket
+                            ticket.isScanned = 1
+                            databaseHandler.addTicket(ticket)
+                            Snackbar.make(requireView(), "Ticket scanned from Registeration Area App", Snackbar.LENGTH_SHORT).show()
                         }
                         dbTicket.isScanned == 1 -> {
                             val dialog = AlertDialog.Builder(context).apply {
