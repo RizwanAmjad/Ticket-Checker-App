@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import com.google.zxing.integration.android.IntentIntegrator
 import com.rizwanamjadnov.ticketcheckerapp.R
 import com.rizwanamjadnov.ticketcheckerapp.database.DatabaseHandler
 import com.rizwanamjadnov.ticketcheckerapp.models.TicketModel
+import org.json.JSONObject
 
 
 class TicketScanFragment : Fragment() {
@@ -66,19 +68,27 @@ class TicketScanFragment : Fragment() {
             if (result.contents == null) {
                 Toast.makeText(requireContext(), "Blank", Toast.LENGTH_SHORT).show()
             } else {
-                val resultContent = result.contents.split('~')
+                val resultContent = result.contents
                 try{
-                    val ticket = TicketModel(resultContent[0], resultContent[1], resultContent[2].toInt())
-                    val dbTicket = databaseHandler.checkTicketExistence(ticket)
+                    val ticket = TicketModel(resultContent)
 
-                    when {
-                        dbTicket == null -> {
+                    val resultContentJson = JSONObject(
+                        String(Base64.decode(resultContent, Base64.DEFAULT)))
+
+                    when (databaseHandler.checkTicketExistence(ticket)) {
+                        null -> {
                             // scanning another app generated ticket
-                            ticket.isScanned = 1
+
+                            resultContentJson.apply {
+                                getString("Category")
+                                getString("FullName")
+                                getString("TournamentDate")
+                                getString("TournamentName")
+                            }
                             databaseHandler.addTicket(ticket)
-                            Snackbar.make(requireView(), "Ticket scanned from Registeration Area App", Snackbar.LENGTH_SHORT).show()
+                            Snackbar.make(requireView(), "Ticket scanned from Registration Area", Snackbar.LENGTH_SHORT).show()
                         }
-                        dbTicket.isScanned == 1 -> {
+                        else -> {
                             val dialog = AlertDialog.Builder(context).apply {
                                 setTitle("Ticket Already Scanned")
                                 setMessage("This ticket has already been Scanned.")
@@ -88,13 +98,10 @@ class TicketScanFragment : Fragment() {
                             }
                             dialog.show()
                         }
-                        else -> {
-                            databaseHandler.markAsScanned(ticket)
-                            Snackbar.make(requireView(), "First Time Scan", Snackbar.LENGTH_SHORT).show()
-                        }
                     }
 
                 }catch (e: Exception){
+                    Log.d("HERE", e.message.toString())
                     val dialog = AlertDialog.Builder(context).apply {
                         setTitle("Invalid Ticket")
                         setMessage("This is not an App Generated Ticket")
@@ -114,5 +121,4 @@ class TicketScanFragment : Fragment() {
         super.onDestroy()
         databaseHandler.close()
     }
-
 }

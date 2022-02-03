@@ -2,11 +2,13 @@ package com.rizwanamjadnov.ticketcheckerapp.fragments
 
 import android.os.Bundle
 import android.os.Environment
+import android.util.Base64
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -15,6 +17,7 @@ import com.rizwanamjadnov.ticketcheckerapp.R
 import com.rizwanamjadnov.ticketcheckerapp.adapters.TicketListAdapter
 import com.rizwanamjadnov.ticketcheckerapp.database.DatabaseHandler
 import com.rizwanamjadnov.ticketcheckerapp.models.TicketModel
+import org.json.JSONObject
 import java.io.File
 import java.io.FileWriter
 
@@ -43,8 +46,15 @@ class TicketListFragment : Fragment() {
 
         dataset = databaseHandler.allTickets().asReversed()
 
-        ticketListRecyclerView.adapter = TicketListAdapter(dataset, parentFragmentManager)
-        ticketListRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        ticketListRecyclerView.adapter = TicketListAdapter(dataset)
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        val dividerItemDecoration = DividerItemDecoration(
+            ticketListRecyclerView.context,
+            layoutManager.orientation
+        )
+        ticketListRecyclerView.addItemDecoration(dividerItemDecoration)
+        ticketListRecyclerView.layoutManager = layoutManager
 
 
         return view
@@ -68,16 +78,22 @@ class TicketListFragment : Fragment() {
         val tickets = databaseHandler.allTickets().asReversed()
         writer.flush()
         writer.writeNext(arrayOf(
-            "Ticket Title",
-            "Ticket Date",
-            "Is Scanned"
+            "Full Name",
+            "Tournament Date",
+            "Category",
+            "Tournament",
+            "Unique Code"
         ))
 
         for (ticket in tickets){
+            val resultContentJson = JSONObject(
+                String(Base64.decode(ticket.ticketJwt, Base64.DEFAULT)))
             writer.writeNext(arrayOf(
-                ticket.ticketTitle,
-                ticket.ticketDate,
-                if (ticket.isScanned == 1) "Scanned" else "Not Scanned"
+                resultContentJson.getString("FullName"),
+                resultContentJson.getString("TournamentDate"),
+                resultContentJson.getString("Category"),
+                resultContentJson.getString("TournamentName"),
+                ticket.ticketJwt
             ))
         }
 

@@ -18,9 +18,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null
         db?.execSQL("CREATE TABLE ${DBContract.TicketEntry.TABLE_NAME} " +
                 "(" +
                 DBContract.TicketEntry.KEY_ID + " INTEGER PRIMARY KEY, "+
-                DBContract.TicketEntry.KEY_TICKET_TITLE + " TEXT,"+
-                DBContract.TicketEntry.KEY_TICKET_DATE +" TEXT,"+
-                DBContract.TicketEntry.KEY_IS_SCANNED +" INTEGER"+
+                DBContract.TicketEntry.KEY_TICKET_JWT + " TEXT"+
                 ")")
     }
 
@@ -33,9 +31,7 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null
         val db = this.writableDatabase
         val contentValues = ContentValues()
 
-        contentValues.put(DBContract.TicketEntry.KEY_TICKET_TITLE, ticket.ticketTitle)
-        contentValues.put(DBContract.TicketEntry.KEY_TICKET_DATE, ticket.ticketDate)
-        contentValues.put(DBContract.TicketEntry.KEY_IS_SCANNED, ticket.isScanned)
+        contentValues.put(DBContract.TicketEntry.KEY_TICKET_JWT, ticket.ticketJwt)
 
         db.insert(DBContract.TicketEntry.TABLE_NAME, null, contentValues)
         db.close()
@@ -53,35 +49,20 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null
 
         if(cursor.moveToFirst()) {
             do{
-                val ticketTitle = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_TITLE))
-                val ticketDate = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_DATE))
-                val isScanned = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_IS_SCANNED))
+                val ticketJwt = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_JWT))
 
-                data.add(TicketModel(ticketTitle, ticketDate, isScanned))
+                data.add(TicketModel(ticketJwt))
             }while (cursor.moveToNext())
         }
         cursor.close()
         return data
     }
 
-    fun markAsScanned(ticket: TicketModel){
-        val db = this.writableDatabase
-        val contentValues = ContentValues()
-
-        contentValues.put(DBContract.TicketEntry.KEY_IS_SCANNED, 1)
-
-       db.update(DBContract.TicketEntry.TABLE_NAME, contentValues,
-            "${DBContract.TicketEntry.KEY_TICKET_TITLE}=? AND ${DBContract.TicketEntry.KEY_TICKET_DATE}=? ",
-            listOf(ticket.ticketTitle, ticket.ticketDate).toTypedArray()
-        )
-        db.close()
-    }
-
     fun checkTicketExistence(ticket: TicketModel): TicketModel?{
         val db = this.readableDatabase
         val cursor: Cursor
         try{
-            cursor = db.rawQuery("SELECT * FROM ${DBContract.TicketEntry.TABLE_NAME} WHERE ${DBContract.TicketEntry.KEY_TICKET_TITLE}='${ticket.ticketTitle}' AND ${DBContract.TicketEntry.KEY_TICKET_DATE}='${ticket.ticketDate}'", null)
+            cursor = db.rawQuery("SELECT * FROM ${DBContract.TicketEntry.TABLE_NAME} WHERE ${DBContract.TicketEntry.KEY_TICKET_JWT}='${ticket.ticketJwt}'", null)
         }catch (e:SQLException){
             return null
         }
@@ -90,11 +71,8 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context, DB_NAME, null
 
         if(cursor.moveToFirst()) {
             do{
-                val ticketTitle = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_TITLE))
-                val ticketDate = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_DATE))
-                val isScanned = cursor.getInt(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_IS_SCANNED))
-
-                ticket = TicketModel(ticketTitle, ticketDate, isScanned)
+                val ticketJwt = cursor.getString(cursor.getColumnIndexOrThrow(DBContract.TicketEntry.KEY_TICKET_JWT))
+                ticket = TicketModel(ticketJwt)
             }while (cursor.moveToNext())
         }
         cursor.close()

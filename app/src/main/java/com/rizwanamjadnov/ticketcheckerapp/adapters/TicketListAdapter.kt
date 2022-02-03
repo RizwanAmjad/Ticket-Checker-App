@@ -1,26 +1,24 @@
 package com.rizwanamjadnov.ticketcheckerapp.adapters
 
-import android.content.Context
-import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rizwanamjadnov.ticketcheckerapp.R
-import com.rizwanamjadnov.ticketcheckerapp.fragments.QRCodeFragment
 import com.rizwanamjadnov.ticketcheckerapp.models.TicketModel
+import org.json.JSONObject
 
-class TicketListAdapter(private val dataset: List<TicketModel>,
-                        private val parentFragmentManager: FragmentManager):
+class TicketListAdapter(private val dataset: List<TicketModel>):
     RecyclerView.Adapter<TicketListAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val ticketTitle: TextView = itemView.findViewById(R.id.ticketTitle)
         val ticketDate: TextView = itemView.findViewById(R.id.ticketDate)
-        val isScanned: TextView = itemView.findViewById(R.id.isScanned)
-        val qrCodeButton: TextView = itemView.findViewById(R.id.qrCodeButton)
+        val ticketCategory: TextView = itemView.findViewById(R.id.ticketCategory)
+        val tournamentName: TextView = itemView.findViewById(R.id.tournamentName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,26 +29,13 @@ class TicketListAdapter(private val dataset: List<TicketModel>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val ticket = dataset[position]
+        val resultContentJson = JSONObject(
+            String(Base64.decode(ticket.ticketJwt, Base64.DEFAULT)))
         holder.apply {
-            ticketTitle.text = ticket.ticketTitle
-            ticketDate.text = ticket.ticketDate
-            if(ticket.isScanned == 0){
-                isScanned.visibility = View.GONE
-                qrCodeButton.setOnClickListener {
-                    // open qr code fragment
-                    parentFragmentManager.beginTransaction().apply {
-                        replace(R.id.navFragmentContainerView, QRCodeFragment().apply {
-                            val bundle = Bundle()
-                            bundle.putString("QR", ticket.ticketTitle+'~'+ticket.ticketDate+"~"+ticket.isScanned)
-                            arguments = bundle
-                        })
-                        addToBackStack("nav")
-                        commit()
-                    }
-                }
-            }else{
-                qrCodeButton.visibility = View.GONE
-            }
+            ticketTitle.text = "Full Name: " + resultContentJson.getString("FullName")
+            ticketDate.text = "Tournament Date: "  + resultContentJson.getString("TournamentDate")
+            ticketCategory.text = "Category: " + resultContentJson.getString("Category")
+            tournamentName.text = "Tournament: " + resultContentJson.getString("TournamentName")
         }
     }
 

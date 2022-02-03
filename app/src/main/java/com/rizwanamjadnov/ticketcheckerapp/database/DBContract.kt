@@ -7,9 +7,7 @@ class DBContract {
         companion object{
             const val TABLE_NAME = "TicketTable"
             const val KEY_ID = "Id"
-            const val KEY_TICKET_TITLE = "TicketTitle"
-            const val KEY_TICKET_DATE = "TicketDate"
-            const val KEY_IS_SCANNED = "IsScanned"
+            const val KEY_TICKET_JWT = "TicketJwt"
         }
     }
 }

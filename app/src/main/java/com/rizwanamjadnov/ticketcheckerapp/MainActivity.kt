@@ -9,7 +9,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.rizwanamjadnov.ticketcheckerapp.fragments.TicketCreateFragment
 import com.rizwanamjadnov.ticketcheckerapp.fragments.TicketListFragment
 import com.rizwanamjadnov.ticketcheckerapp.fragments.TicketScanFragment
 
@@ -18,7 +17,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fragmentContainerView: FragmentContainerView
 
     private lateinit var ticketListFragment: TicketListFragment
-    private lateinit var ticketCreateFragment: TicketCreateFragment
     private lateinit var ticketScanFragment: TicketScanFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +24,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         ticketListFragment = TicketListFragment()
-        ticketCreateFragment = TicketCreateFragment()
         ticketScanFragment = TicketScanFragment()
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
@@ -40,10 +37,6 @@ class MainActivity : AppCompatActivity() {
             return@setOnItemSelectedListener when(it.itemId){
                 R.id.navTicketList->{
                     navigateToFragment(ticketListFragment)
-                    true
-                }
-                R.id.navTicketCreate->{
-                    navigateToFragment(ticketCreateFragment)
                     true
                 }
                 R.id.navTicketScan->{

@@ -1,7 +1,9 @@
 package com.rizwanamjadnov.ticketcheckerapp.models
 
+import android.util.Base64
+import org.json.JSONObject
+
 class TicketModel (
-    val ticketTitle:String,
-    val ticketDate: String,
-    var isScanned: Int) {
+    val ticketJwt:String) {
+
 }

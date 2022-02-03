@@ -8,8 +8,4 @@
         android:id="@+id/navTicketScan"
         android:title="@string/scan_ticket"
         android:icon="@drawable/ic_baseline_qr_code_scanner_24"/>
-    <item
-        android:id="@+id/navTicketCreate"
-        android:title="@string/generate_ticket"
-        android:icon="@drawable/ic_baseline_create_24"/>
 </menu>
