@@ -1,5 +1,9 @@
 package com.rizwanamjadnov.ticketcheckerapp.fragments
 
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Base64
@@ -8,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,8 +43,19 @@ class TicketListFragment : Fragment() {
         ticketListRecyclerView = view.findViewById(R.id.ticketsRecyclerView)
 
         exportCSVButton.setOnClickListener {
-            writeToCSV()
-            Snackbar.make(requireView(), "Exported CSV in Internal Storage", Snackbar.LENGTH_SHORT).show()
+            val alertDialog = AlertDialog.Builder(requireContext()).apply {
+                setTitle("Share too?")
+                setMessage("Select Yes if You want to Share data for printing or any other Purpose")
+                setPositiveButton("Yes") { _, _ ->
+                    writeToCSV(true)
+                    Snackbar.make(requireView(), "Exported & Now Sharing", Snackbar.LENGTH_SHORT).show()
+                }
+                setNegativeButton("No") { _, _ ->
+                    writeToCSV(false)
+                    Snackbar.make(requireView(), "Exported CSV in Internal Storage", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+            alertDialog.show()
         }
 
         databaseHandler = DatabaseHandler(requireContext())
@@ -60,7 +76,7 @@ class TicketListFragment : Fragment() {
         return view
     }
 
-    private fun writeToCSV(){
+    private fun writeToCSV(doShare: Boolean){
 
         val baseDir = Environment.getExternalStorageDirectory().absolutePath
         val fileName = "Ticket Checking App Exported Data.csv"
@@ -97,7 +113,29 @@ class TicketListFragment : Fragment() {
             ))
         }
 
-        writer.close();
+        writer.close()
+
+        if(doShare){
+            //sharingFile
+            val intent = Intent(Intent.ACTION_SEND)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                intent.putExtra(
+                    Intent.EXTRA_STREAM,
+                    FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.rizwanamjadnov.ticketcheckerapp",
+                        f
+                    )
+                )
+            } else {
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f))
+            }
+            intent.type = "*/*"
+            startActivity(intent)
+
+        }
+
     }
 
     override fun onDestroy() {
